@@ -12,7 +12,7 @@ public class Comment {
     private Comment(String content){
         new Comment(content,null);
     }
-    private Comment(String content,User sender){
+    public Comment(String content, User sender){
         setContent(content);
         setSender(sender);
     }

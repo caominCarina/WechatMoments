@@ -80,12 +80,12 @@ public class TweetItemAdapter extends BaseAdapter {
                 vh.imgsGridView.setNumColumns(size);
             }
             vh.imgsGridView.setVisibility(View.VISIBLE);
-           // vh.imgsGridView.setAdapter(new TweetImageAdapter(context, tweet.getImages()));
+            vh.imgsGridView.setAdapter(new TweetImageAdapter(context, tweet.getImages()));
         } else {
             vh.imgsGridView.setVisibility(View.GONE);
         }
         if (tweet.hasComments()) {
-            //vh.commentListView.setAdapter(new CommentAdapter(context, tweet.getComments()));
+            vh.commentListView.setAdapter(new CommentAdapter(context, tweet.getComments()));
             vh.commentListView.setVisibility(View.VISIBLE);
         } else {
             vh.commentListView.setVisibility(View.GONE);

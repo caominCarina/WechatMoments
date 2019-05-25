@@ -8,7 +8,7 @@ public class Image {
     private String url;
 
     private Image(){}
-    private Image(String url){
+    public Image(String url){
         setUrl(url);
     }
 
