@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tweet_list_bg"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <ImageView
+        android:id="@+id/avatarImage"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="10dp"
+        android:background="@null"
+        android:src="@drawable/user_avatar"
+        android:scaleType="fitXY"/>
+
+    <RelativeLayout
+        android:layout_toRightOf="@id/avatarImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/nickText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="nick"
+            android:textColor="@color/gray"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/contentText"
+            android:layout_below="@id/nickText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="content"
+            android:textColor="@color/text_black"
+            android:textSize="16sp" />
+
+        <GridView
+            android:id="@+id/imgsGridView"
+            android:layout_below="@id/contentText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:padding="10dp"
+            android:visibility="gone" />
+
+        <com.cm.android.wechatmoments.ui.view.TweetScrollListView
+            android:layout_below="@id/imgsGridView"
+            android:id="@+id/commentListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="0dp"
+            android:listSelector="@null" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

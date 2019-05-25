@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/lodingText"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:minHeight="500dp"
+          android:paddingTop="100dp"
+          android:gravity="center_horizontal"
+          android:text="@string/no_tweet_info"
+          android:textColor="#666666"
+          android:textSize="16sp" />
