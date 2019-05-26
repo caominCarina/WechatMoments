@@ -27,17 +27,18 @@ import com.cm.android.wechatmoments.util.GetInfoFromNet;
 import com.cm.android.wechatmoments.util.NetworkUtil;
 import com.squareup.picasso.Picasso;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements UserLoadCallback,TweetsLoadCallback{
     private String TAG = "MainActivity";
     private Context mContext;
-    private static final boolean LAUNCH_FOR_TEST = true;
+    private static final boolean LAUNCH_FOR_TEST = false;
 
     private List<TweetItem> mTweetItemData = new LinkedList<TweetItem>();
     private TweetScrollListView mTweetListView;
-    private TweetItemAdapter mTweetItemAdapter= null;
+    private TweetItemAdapter mTweetItemAdapter = new TweetItemAdapter();
 
     private FloatingActionButton mUserAvatar;
     private CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -85,16 +86,16 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
         mCollapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.GRAY);
-        /*mCollapsingToolbarLayout.setTitleEnabled(false);*/
         AppBarLayout appBarLayout = findViewById(R.id.appBar);
         appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
-                Log.d("caomin#STATE",state.name());
+                Log.d(TAG,"appBarLayout.onStateChanged="+state.name());
                 if( state == State.EXPANDED ) {
                     //expanded
                     mUserNameText.setVisibility(View.VISIBLE);
-                    Log.d(TAG,"caomin#AppBar expanded");
+                    refreshTweetLists();
+                    Log.d(TAG,"AppBar expanded");
                 }else if(state == State.COLLAPSED){
                     //collapsed
                     mCollapsingToolbarLayout.setTitle(getResources().getString(R.string.page_info));
@@ -112,21 +113,34 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
         if(mTweetItemData.isEmpty()){
             mTweetItemData = new ServiceErrorAndUseTestData().initData(mContext,mTweetItemData);
         }
-        mTweetItemAdapter = new TweetItemAdapter(mContext,mTweetItemData);
+       /* Iterator<TweetItem> tweets = mTweetItemData.iterator();
+        while(tweets.hasNext()){
+            Log.d(TAG,"initView!!!!!print main activity tweetlist!!!!!!");
+            TweetItem tweet = tweets.next();
+            tweet.printTweetInfo();
+        }*/
+    }
+
+    private void bindTweetListsAdapter(){
+        mTweetItemAdapter.setContext(mContext);
+        mTweetItemAdapter.setTweets(mTweetItemData);
         mTweetListView.setAdapter(mTweetItemAdapter);
     }
+
     private void onBackPress(){
         Log.d(TAG,"Exit the app");
         finish();
     }
 
-    private void getContent() throws Exception {
-        if(mNetworkUtil.isNetworkAvailable(mContext) & !LAUNCH_FOR_TEST){
+    private void getContent() {
+        if(mNetworkUtil.isNetworkAvailable(mContext) & !LAUNCH_FOR_TEST || true){
             getInfoFromNet();
         } else{
             getTweetsInfoFromTest(mContext,mTweetItemData);
             getUsersInfoFromTest();
         }
+        mTweetItemAdapter = new TweetItemAdapter(mContext,mTweetItemData);
+        mTweetListView.setAdapter(mTweetItemAdapter);
     }
 
     private void getInfoFromNet(){
@@ -135,16 +149,24 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
         }
         mTweetItemData.clear();
         mGetInfoFromNet.getTweetInfo();
+        mTweetItemData = mServiceErrorAndUseTestData.getDataFromLocalJson(mContext);
+        Iterator<TweetItem> tweets = mTweetItemData.iterator();
         mGetInfoFromNet.getUserInfo();
     }
+
     private void getTweetsInfoFromTest(Context contex,List<TweetItem> tweetItems){
         mTweetItemData.clear();
         mTweetItemData = mServiceErrorAndUseTestData.initData(mContext,tweetItems);
+        bindTweetListsAdapter();
     }
 
     private void getUsersInfoFromTest(){
         mProfileImage.setImageResource(R.drawable.default_background);
         mUserAvatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.user_avatar));
+    }
+
+    private void refreshTweetLists() {
+        getContent();
     }
 
     /**
@@ -153,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
      */
     @Override
     public void onLoadUserInfoSuccess(User user) {
-        Log.d("caomin","onLoadUserInfoSuccess!!");
+        Log.d(TAG,"onLoadUserInfoSuccess!!");
         Log.d("caomin","onLoadUserInfoSuccess--nickname="+user.getNick());
         mUserNameText.setText(user.getNick());
         if(user.getProfileImage() != null){
@@ -163,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
             Picasso.with(mContext).load(user.getAvatar()).into(mUserAvatar);
         }
     }
-
 
     @Override
     public void onLoadUserInfoFail() {
@@ -177,6 +198,8 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
     @Override
     public void onLoadAllTweetSuccess(List<TweetItem> list, int totalCount) {
         Log.d(TAG,"onLoadAllTweetSuccess");
+        mTweetItemData = list;
+        bindTweetListsAdapter();
     }
 
     @Override
@@ -187,6 +210,8 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
     @Override
     public void queryTweetSuccess(List<TweetItem> list) {
         Log.d(TAG,"queryTweetSuccess");
+        mTweetItemData = list;
+        bindTweetListsAdapter();
     }
 
     @Override

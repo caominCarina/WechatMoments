@@ -67,6 +67,7 @@ public class GetInfoFromNet {
         }else{
             if(userInfo){
                 User mUser = gson.fromJson(response.body().charStream(), User.class);
+                mUser.printUserInfo();
                 mUserLoadCallback.onLoadUserInfoSuccess(mUser);
             }else if(tweetInfo){
                 List<TweetItem> mTweetItems = gson.fromJson(response.body().charStream(), new TypeToken<List<TweetItem>>(){}.getType());

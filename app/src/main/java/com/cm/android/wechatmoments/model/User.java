@@ -1,14 +1,19 @@
 package com.cm.android.wechatmoments.model;
 
 import android.text.TextUtils;
+import android.util.Log;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * User info
  */
 public class User {
+    private String TAG = "User:";
     private String username;
     private String nick;
     private String avatar;
+    @SerializedName("profile-image")
     private String profileImage;
 
     public User(){
@@ -63,4 +68,9 @@ public class User {
         }
         return false;
     };
+    public void printUserInfo(){
+        Log.d(TAG,"User Info:");
+        Log.d(TAG,"nickName:"+getNick()+"\n userName:"+getUsername()
+                +"\n ProfileImage:"+getProfileImage()+"\n userAvatar:"+getAvatar());
+    }
 }

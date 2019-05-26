@@ -16,22 +16,19 @@ import com.cm.android.wechatmoments.model.Image;
 import com.cm.android.wechatmoments.model.TweetItem;
 import com.cm.android.wechatmoments.model.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * LoadImageUtil
  */
 public class ServiceErrorAndUseTestData {
+    private String TAG = "ServiceErrorAndUseTestData";
 
+    private final Gson gson = new Gson();
     public List<TweetItem> initData(Context context,List<TweetItem> mTweetItemData){
         User mTestUser1 = new User("user1",null,"null","null");
         User mTestUser2 = new User("user2",null,"null","null");
@@ -50,13 +47,14 @@ public class ServiceErrorAndUseTestData {
         Image image4 = new Image(mUrlLocal1.toString());
         Image image5 = new Image(mUrlLocal1.toString());
         Image image6 = new Image(mUrlLocal1.toString());
-        List<Image> images = Arrays.asList(image1,image2, image3,image4,image5,image6);
+        List<Image> images1 = Arrays.asList(image1,image2, image3,image4,image5,image6);
+        List<Image> images2 = Arrays.asList(image2);
         Comment mTestComment1 = new Comment("This is my first content! welcome to Moments of wechat!",mTestUser9);
         Comment mTestComment2 = new Comment("This is my second content! welcome to Moments of wechat too!",mTestUser8);
         List<Comment> comments = Arrays.asList(mTestComment1,mTestComment2);
 
-        TweetItem mTestTweetItem1 = new TweetItem("contents1",images,mTestUser1,comments);
-        TweetItem mTestTweetItem2 = new TweetItem("contents2",null,mTestUser2,comments);
+        TweetItem mTestTweetItem1 = new TweetItem("contents1",images1,mTestUser1,comments);
+        TweetItem mTestTweetItem2 = new TweetItem("contents2",images2,mTestUser2,comments);
         TweetItem mTestTweetItem3 = new TweetItem("contents3",null,mTestUser3,null);
         TweetItem mTestTweetItem4 = new TweetItem("contents4",null,mTestUser4,null);
         TweetItem mTestTweetItem5 = new TweetItem("contents1",null,mTestUser5,null);
@@ -85,4 +83,23 @@ public class ServiceErrorAndUseTestData {
         return Uri.parse(path);
     }
 
+    public List<TweetItem> getDataFromLocalJson(Context context){
+        String fileName = "tweet.json";
+        String localJson = LocalJsonResolutionUtils.getJson(context, fileName);
+        Log.d(TAG,"localJson="+localJson);
+        List<TweetItem> mTweetItems = gson.fromJson(localJson, new TypeToken<List<TweetItem>>(){}.getType());
+
+        Iterator<TweetItem> tweets = mTweetItems.iterator();
+        while(tweets.hasNext()){
+            TweetItem tweet = tweets.next();
+            if(tweet.getContent()==null && tweet.getImages()==null)
+            {
+                tweets.remove();
+                continue;
+            }
+            tweet.printTweetInfo();
+        }
+        Log.d(TAG,"after----TweetSize="+mTweetItems.size());
+        return mTweetItems;
+    }
 }

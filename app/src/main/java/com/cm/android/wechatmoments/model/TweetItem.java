@@ -1,12 +1,16 @@
 package com.cm.android.wechatmoments.model;
 
 import android.text.TextUtils;
+import android.util.Log;
+
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * tweet info Item
  */
 public class TweetItem {
+    private String TAG = "TweetItem";
 
     private String content;
     private List<Image> images;
@@ -65,5 +69,26 @@ public class TweetItem {
 
     public boolean hasComments() {
         return comments != null && comments.size() > 0;
+    }
+
+    public void printTweetInfo(){
+        Log.d(TAG,"Tweet Info:");
+        Log.d(TAG,"content:"+getContent()+
+                "\n Sender.user:"+getSender().getUsername()+"Sender.userAvatar:"+getSender().getAvatar()
+                +"\n Sender.nick:"+getSender().getNick());
+        if(getComments() != null){
+            Iterator<Comment> mComments = getComments().iterator();
+            while (mComments.hasNext()) {
+                Comment comment = mComments.next();
+                comment.printCommentInfo();
+            }
+        }
+        if(getImages()!= null){
+            Iterator<Image> mImages = getImages().iterator();
+            while (mImages.hasNext()) {
+                Image image = mImages.next();
+                Log.d(TAG,"Image:"+image.getUrl());
+            }
+        }
     }
 }

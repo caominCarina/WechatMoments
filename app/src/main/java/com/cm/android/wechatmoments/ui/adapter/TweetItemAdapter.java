@@ -1,6 +1,7 @@
 package com.cm.android.wechatmoments.ui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,26 @@ import java.util.List;
  */
 public class TweetItemAdapter extends BaseAdapter {
 
+    private String TAG = "TweetItemAdapter";
     private List<TweetItem> tweets;
     private List<String> urls_list;
 
     private Context context;
+    public TweetItemAdapter() {
+    }
+    public TweetItemAdapter(Context context) {
+        this.context = context;
+    }
 
     public TweetItemAdapter(Context context, List<TweetItem> tweets) {
         this.context = context;
+        this.tweets = tweets;
+    }
+    public void setContext(Context context){
+        this.context = context;
+    }
+
+    public void setTweets(List<TweetItem> tweets){
         this.tweets = tweets;
     }
 
@@ -70,8 +84,17 @@ public class TweetItemAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
         }
         TweetItem tweet = (TweetItem) getItem(position);
-        vh.nickText.setText(tweet.getSender().getNick());
-        vh.contentText.setText(tweet.getContent());
+        if(tweet.getSender().getNick()!= null){
+            Log.d(TAG,"adapter===getNick="+tweet.getSender().getNick());
+            vh.nickText.setText(tweet.getSender().getNick());
+        }else{
+            vh.nickText.setText("Default");
+        }
+        if(tweet.getContent()!= null){
+            vh.contentText.setText(tweet.getContent());
+        }else{
+            vh.contentText.setVisibility(View.GONE);
+        }
         if (tweet.hasImages()) {
             int size = tweet.getImages().size();
             urls_list = new ArrayList<>();
