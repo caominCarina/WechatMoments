@@ -81,8 +81,20 @@
             android:id="@+id/user_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/user_avatar"
+            app:borderWidth="0.0dip"
+            app:fabSize="normal"
             app:layout_anchor="@id/appBar"
             app:layout_anchorGravity="end|bottom|right"
             />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="185dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="125dp"
+        android:paddingLeft="80dp"
+        android:text="nickname"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_anchorGravity="end|bottom|right" />
 </android.support.design.widget.CoordinatorLayout>

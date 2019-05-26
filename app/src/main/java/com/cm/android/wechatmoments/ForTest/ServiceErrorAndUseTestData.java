@@ -1,4 +1,4 @@
-package com.cm.android.wechatmoments.ForTest;
+package com.cm.android.wechatmoments.forTest;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -33,7 +33,6 @@ import java.util.List;
 public class ServiceErrorAndUseTestData {
 
     public List<TweetItem> initData(Context context,List<TweetItem> mTweetItemData){
-        mTweetItemData = new LinkedList<TweetItem>();
         User mTestUser1 = new User("user1",null,"null","null");
         User mTestUser2 = new User("user2",null,"null","null");
         User mTestUser3 = new User("user3",null,"null","null");
@@ -57,7 +56,7 @@ public class ServiceErrorAndUseTestData {
         List<Comment> comments = Arrays.asList(mTestComment1,mTestComment2);
 
         TweetItem mTestTweetItem1 = new TweetItem("contents1",images,mTestUser1,comments);
-        TweetItem mTestTweetItem2 = new TweetItem("contents2",null,mTestUser2,null);
+        TweetItem mTestTweetItem2 = new TweetItem("contents2",null,mTestUser2,comments);
         TweetItem mTestTweetItem3 = new TweetItem("contents3",null,mTestUser3,null);
         TweetItem mTestTweetItem4 = new TweetItem("contents4",null,mTestUser4,null);
         TweetItem mTestTweetItem5 = new TweetItem("contents1",null,mTestUser5,null);
