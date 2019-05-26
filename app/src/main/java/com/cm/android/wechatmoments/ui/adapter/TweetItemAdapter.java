@@ -1,20 +1,19 @@
 package com.cm.android.wechatmoments.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cm.android.wechatmoments.R;
 import com.cm.android.wechatmoments.model.TweetItem;
+import com.jaeger.ninegridimageview.NineGridImageView;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +22,7 @@ import java.util.List;
 public class TweetItemAdapter extends BaseAdapter {
 
     private List<TweetItem> tweets;
+    private List<String> urls_list;
 
     private Context context;
 
@@ -63,7 +63,7 @@ public class TweetItemAdapter extends BaseAdapter {
             vh.avatarImage = (ImageView) convertView.findViewById(R.id.avatarImage);
             vh.nickText = (TextView) convertView.findViewById(R.id.nickText);
             vh.contentText = (TextView) convertView.findViewById(R.id.contentText);
-            vh.imgsGridView = (GridView) convertView.findViewById(R.id.imgsGridView);
+            vh.imgsGridView = (NineGridImageView) convertView.findViewById(R.id.imgsGridView);
             vh.commentListView = (ListView) convertView.findViewById(R.id.commentListView);
             convertView.setTag(vh);
         } else {
@@ -74,13 +74,13 @@ public class TweetItemAdapter extends BaseAdapter {
         vh.contentText.setText(tweet.getContent());
         if (tweet.hasImages()) {
             int size = tweet.getImages().size();
-            if (size >= 3) {
-                vh.imgsGridView.setNumColumns(3);
-            } else {
-                vh.imgsGridView.setNumColumns(size);
+            urls_list = new ArrayList<>();
+            for(int i = 0;i < size;i++){
+                urls_list.add(tweet.getImages().get(i).getUrl());
             }
             vh.imgsGridView.setVisibility(View.VISIBLE);
-            vh.imgsGridView.setAdapter(new TweetImageAdapter(context, tweet.getImages()));
+            vh.imgsGridView.setAdapter(new NineImageAdapter());
+            vh.imgsGridView.setImagesData(urls_list);
         } else {
             vh.imgsGridView.setVisibility(View.GONE);
         }
@@ -97,7 +97,7 @@ public class TweetItemAdapter extends BaseAdapter {
         private ImageView avatarImage = null;
         private TextView nickText = null;
         private TextView contentText = null;
-        private GridView imgsGridView=null;
+        private NineGridImageView imgsGridView=null;
         private ListView commentListView=null;
     }
 

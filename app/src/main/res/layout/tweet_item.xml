@@ -36,7 +36,7 @@
             android:textColor="@color/text_black"
             android:textSize="16sp" />
 
-        <GridView
+        <com.jaeger.ninegridimageview.NineGridImageView
             android:id="@+id/imgsGridView"
             android:layout_below="@id/contentText"
             android:layout_width="match_parent"
