@@ -34,7 +34,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements UserLoadCallback,TweetsLoadCallback{
     private String TAG = "MainActivity";
     private Context mContext;
+    /*In order to view the phenomenon of Test, You can change the LAUNCH_FOR_TEST to True*/
     private static final boolean LAUNCH_FOR_TEST = false;
+    /*If the network is slowly, You can change the GET_DATA_FROM_LOCAL_JSON to True*/
+    private static final boolean GET_DATA_FROM_LOCAL_JSON = false;
 
     private List<TweetItem> mTweetItemData = new LinkedList<TweetItem>();
     private TweetScrollListView mTweetListView;
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
     private TextView mUserNameText;
     private NetworkUtil mNetworkUtil = new NetworkUtil();
     private GetInfoFromNet mGetInfoFromNet;
+    private User mLocalJsonUser;
     private ServiceErrorAndUseTestData mServiceErrorAndUseTestData = new ServiceErrorAndUseTestData();
 
 
@@ -127,13 +131,23 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
         mTweetListView.setAdapter(mTweetItemAdapter);
     }
 
+    private void bindUserToView(User user){
+        mUserNameText.setText(user.getNick());
+        if(user.getProfileImage() != null){
+            Picasso.with(mContext).load(user.getProfileImage()).into(mProfileImage);
+        }
+        if(user.getAvatar() != null){
+            Picasso.with(mContext).load(user.getAvatar()).into(mUserAvatar);
+        }
+    }
+
     private void onBackPress(){
         Log.d(TAG,"Exit the app");
         finish();
     }
 
     private void getContent() {
-        if(mNetworkUtil.isNetworkAvailable(mContext) & !LAUNCH_FOR_TEST || true){
+        if(mNetworkUtil.isNetworkAvailable(mContext) & !LAUNCH_FOR_TEST){
             getInfoFromNet();
         } else{
             getTweetsInfoFromTest(mContext,mTweetItemData);
@@ -148,10 +162,14 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
             mGetInfoFromNet = new GetInfoFromNet(this,this);
         }
         mTweetItemData.clear();
-        mGetInfoFromNet.getTweetInfo();
-        mTweetItemData = mServiceErrorAndUseTestData.getDataFromLocalJson(mContext);
-        Iterator<TweetItem> tweets = mTweetItemData.iterator();
-        mGetInfoFromNet.getUserInfo();
+        if(GET_DATA_FROM_LOCAL_JSON){
+            mTweetItemData = mServiceErrorAndUseTestData.getDataFromLocalJson(mContext);
+            mLocalJsonUser = mServiceErrorAndUseTestData.getUserFromLocalJson(mContext);
+            bindUserToView(mLocalJsonUser);
+        }else{
+            mGetInfoFromNet.getTweetInfo();
+            mGetInfoFromNet.getUserInfo();
+        }
     }
 
     private void getTweetsInfoFromTest(Context contex,List<TweetItem> tweetItems){
@@ -176,14 +194,7 @@ public class MainActivity extends AppCompatActivity implements UserLoadCallback,
     @Override
     public void onLoadUserInfoSuccess(User user) {
         Log.d(TAG,"onLoadUserInfoSuccess!!");
-        Log.d("caomin","onLoadUserInfoSuccess--nickname="+user.getNick());
-        mUserNameText.setText(user.getNick());
-        if(user.getProfileImage() != null){
-            Picasso.with(mContext).load(user.getProfileImage()).into(mProfileImage);
-        }
-        if(user.getAvatar() != null){
-            Picasso.with(mContext).load(user.getAvatar()).into(mUserAvatar);
-        }
+        bindUserToView(user);
     }
 
     @Override

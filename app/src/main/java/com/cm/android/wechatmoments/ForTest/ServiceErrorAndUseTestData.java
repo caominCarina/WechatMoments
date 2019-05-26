@@ -102,4 +102,12 @@ public class ServiceErrorAndUseTestData {
         Log.d(TAG,"after----TweetSize="+mTweetItems.size());
         return mTweetItems;
     }
+
+    public User getUserFromLocalJson(Context context){
+        String fileName = "user.json";
+        String localJson = LocalJsonResolutionUtils.getJson(context, fileName);
+        Log.d(TAG,"user.Json="+localJson);
+        User mUser = gson.fromJson(localJson, User.class);
+        return mUser;
+    }
 }
